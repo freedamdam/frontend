@@ -35,7 +35,7 @@ export const SocketProvider = ({ children }: { children: JSX.Element }) => {
 
 	useEffect(() => {
 		if (!connected) return console.log('[-] Socket Disconnected')
-		else console.log('[#] Socekt Connected')
+		else console.log('[#] Socket Connected')
 
 		socket.on('error', (data: any) => toast.error(data.msg))
 		socket.on('test', (data: any) => console.log('[*] Socket test', data))
