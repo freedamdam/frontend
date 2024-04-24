@@ -5,6 +5,7 @@ import Modal from 'react-modal'
 import DambiSVG from 'public/icons/dambi/round_color_dambi.svg'
 import IconSVG from 'public/icons/orange_icon_exit_pc.svg'
 import IconMSVG from 'public/icons/orange_icon_exit_m.svg'
+import { toast } from 'react-toastify'
 
 interface Props {
 	open: boolean
@@ -43,6 +44,7 @@ const DebateMemberCancelModal = ({ open, onClose, onSubmit, className }: Props) 
 	const char_size = device === 'mobile' ? 80 : 100
 
 	const submit = () => {
+		toast('토론 참가 취소 완료')
 		onClose()
 		onSubmit && onSubmit()
 	}
@@ -61,7 +63,7 @@ const DebateMemberCancelModal = ({ open, onClose, onSubmit, className }: Props) 
 							)}
 						</div>
 
-						<span className='mb-10 text-xl font-extrabold text-main-900'>정말로 토론 참가를 취소하시겠습니까?</span>
+						<span className='mb-10 text-xl font-extrabold text-main-900'>토론 참가를 취소하시겠습니까?</span>
 					</div>
 				</div>
 
