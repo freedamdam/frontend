@@ -1,14 +1,13 @@
 import { useState } from 'react'
-import { styled } from 'styled-components'
+import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 
 import Layout from 'layout'
 import * as S from './style'
 
 import LargeButton from 'components/Button/Large'
 import TitleText from 'components/common/TitleText'
-import axios from 'axios'
-import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
+import { API } from 'pages/api/api'
 
 const Register = () => {
 	const [identity, setIdentity] = useState('')
@@ -19,6 +18,7 @@ const Register = () => {
 	const [sex, setSex] = useState('woman')
 
 	const [idCheckMsg, setIdCheckMsg] = useState('') /** 아이디 유효성 검사를 위한 메세지 */
+	const [idCheck, setIdCheck] = useState(false) /** 아이디 중복 확인 상태 */
 	const [pwdCheckMsg, setPwdCheckMsg] = useState('') /** 비밀번호 유효성 검사를 위한 메세지 */
 	const [pwdConfirmMsg, setPwdConfirmMsg] = useState('') /** 비밀번호 확인을 위한 메세지 */
 	const [nameCheckMsg, setNameCheckMsg] = useState('')
@@ -28,6 +28,7 @@ const Register = () => {
 
 	const idRegex = /^(?=.*[a-z])(?=.*[0-9]).{5,20}$/
 	const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIdCheck(false)
 		const userInput = e.target.value
 		setIdentity(userInput)
 
@@ -79,15 +80,30 @@ const Register = () => {
 		return setDateOfBirthCheckMsg('')
 	}
 
-	const apiInstance = axios.create({
-		baseURL: process.env.NEXT_PUBLIC_API,
-		headers: {
-			'Content-Type': 'application/json',
-			// 다른 헤더 설정
-		},
-	})
+	/** 아이디 중복 확인 */
+	const handleDuplicateCheckId = () => {
+		if (identity.length === 0) return setIdCheckMsg('* 아이디를 입력해주세요.')
 
-	const onSubmit = () => {
+		API.post('/auth/check-identity', JSON.stringify({ identity: identity }))
+			.then((response) => {
+				console.log(response)
+				if (response.status === 200) {
+					if (response.data.msg === 'OK') {
+						toast('사용 가능한 아이디입니다.')
+						setIdCheck(true)
+					} else {
+						toast.error('이미 사용중인 아이디입니다.')
+						setIdCheck(false)
+					}
+				}
+			})
+			.catch((error) => {
+				console.error('API 요청 중 오류 발생:', error)
+			})
+	}
+
+	const handleRegister = () => {
+		if (!idCheck) return toast.error('아이디 중복 확인을 해주세요.')
 		const userData = {
 			identity: identity,
 			password: password,
@@ -96,8 +112,7 @@ const Register = () => {
 			birth: birth,
 		}
 
-		apiInstance
-			.post('/auth/register', JSON.stringify(userData))
+		API.post('/auth/register', JSON.stringify(userData))
 			.then((response) => {
 				console.log(response)
 				if (response.status === 200) {
@@ -122,16 +137,21 @@ const Register = () => {
 						<div>
 							<S.InputWrapper>
 								<S.InputLabel>아이디</S.InputLabel>
-								<S.Input
-									required
-									type='text'
-									placeholder='아이디'
-									value={identity}
-									onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeId(e)}
-									minLength={5}
-									maxLength={20}
-								/>
-								<S.MessageText>{idCheckMsg}</S.MessageText>
+								<div className='flex items-center justify-center gap-2'>
+									<div className='flex flex-col w-full'>
+										<S.Input
+											required
+											type='text'
+											placeholder='아이디'
+											value={identity}
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeId(e)}
+											minLength={5}
+											maxLength={20}
+										/>
+										<S.MessageText>{idCheckMsg}</S.MessageText>
+									</div>
+									<S.Button onClick={handleDuplicateCheckId}>중복 확인</S.Button>
+								</div>
 							</S.InputWrapper>
 							<S.InputWrapper>
 								<S.InputLabel>비밀번호</S.InputLabel>
@@ -188,11 +208,11 @@ const Register = () => {
 							<div className='pb-[24px] md:pb-[36px] border-b-[1px] border-b-[#D8D8D8] flex flex-col gap-2'>
 								<S.InputLabel htmlFor='gender'>성별</S.InputLabel>
 								<div className='flex gap-3'>
-									<FormRadioInput onChange={() => setSex('woman')} type='radio' id='radio-1' name='gender' value='woman' checked />
-									<FormRadioLabel htmlFor='radio-1'>여자</FormRadioLabel>
+									<S.FormRadioInput onChange={() => setSex('woman')} type='radio' id='radio-1' name='gender' value='woman' checked />
+									<S.FormRadioLabel htmlFor='radio-1'>여자</S.FormRadioLabel>
 
-									<FormRadioInput onChange={() => setSex('man')} type='radio' id='radio-2' name='gender' value='man' />
-									<FormRadioLabel htmlFor='radio-2'>남자</FormRadioLabel>
+									<S.FormRadioInput onChange={() => setSex('man')} type='radio' id='radio-2' name='gender' value='man' />
+									<S.FormRadioLabel htmlFor='radio-2'>남자</S.FormRadioLabel>
 								</div>
 							</div>
 						</div>
@@ -200,7 +220,7 @@ const Register = () => {
 							<p className='font-extrabold md:text-[16px] text-[14px]'>건강한 토의토론 문자를 위해 본인인증 서비스를 실시하고 있습니다.</p>
 						</div> */}
 						<div className='w-full mt-[2.4rem] md:mt-[3.6rem] mb-[2rem] text-[#666666]'>
-							<LargeButton text={'완료'} onClick={onSubmit} />
+							<LargeButton text={'완료'} onClick={handleRegister} />
 						</div>
 					</div>
 				</div>
@@ -210,42 +230,3 @@ const Register = () => {
 }
 
 export default Register
-
-const FormRadioLabel = styled.label`
-	padding: 14px 36px;
-
-	border: 1px solid #adb2bb;
-	border-radius: 50px;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	cursor: pointer;
-
-	@media screen and (max-width: 768px) {
-		width: 100%;
-		padding: 10px 0px;
-		font-size: 14px;
-	}
-`
-
-const FormRadioInput = styled.input.attrs({ type: 'radio' })`
-	display: none;
-
-	&:checked {
-		display: inline-block;
-		background: none;
-		padding: 0px 10px;
-		text-align: center;
-		height: 35px;
-		line-height: 33px;
-		font-weight: 500;
-		display: none;
-	}
-	&:checked + ${FormRadioLabel} {
-		border: 2px solid #184da0;
-		font-weight: 900;
-		color: #184da0;
-	}
-`
