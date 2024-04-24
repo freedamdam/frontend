@@ -18,10 +18,8 @@ import DebateChatBox from 'components/Chat/ListBox'
 import ChatInput from 'components/Chat/Input'
 //-assets
 import ArrowSVG from 'public/icons/btn_left_arrow_pc.svg'
-import ArrowMSVG from 'public/icons/btn_left_arrow_m.svg'
 import ClockSVG from 'public/icons/btn_clock_orange_m.svg'
 import PlaySVG from 'public/icons/orange_play_pc.svg'
-import DambiSVG from 'public/icons/dambi/round_color_dambi.svg'
 import DebateStartConfirmModal from 'components/Debate/modal/StartConfirm'
 
 interface Props {
@@ -43,7 +41,7 @@ const DebateChatRoomPage: NextPage<Props> = ({ debateId }: Props) => {
 	const { user } = useAuth()
 	const { socket, connected, reconnect } = useContext(SocketContext)
 	const { info } = useAppSelector((state) => state.debate)
-	const { room, chat, status, errors, msg } = useAppSelector((state) => state.debateChat)
+	const { room, chat, status, errors, msg } = useAppSelector((state: { debateChat: DebateState }) => state.debateChat)
 
 	const isAuthor = info?.authorId === user?.id
 	const isMember = info?.agreeUserIds?.includes(user?.id || '') || info?.disagreeUserIds?.includes(user?.id || '')
@@ -63,6 +61,7 @@ const DebateChatRoomPage: NextPage<Props> = ({ debateId }: Props) => {
 	const chkTeamChat = isMember && (allowTeamChat || step === '시작 전')
 	const chkVisibleInput = (chkAllChat && group === 'all') || (chkTeamChat && group === 'team')
 
+	// 채팅방 정보 가져오기
 	useEffect(() => {
 		dispatch(DebateAction.GetDetailOne(debateId))
 		dispatch(DebateChatAction.GetRoomOne(debateId))
@@ -97,6 +96,7 @@ const DebateChatRoomPage: NextPage<Props> = ({ debateId }: Props) => {
 	//-message
 	const send = () => {
 		if (!message.length) return
+
 		const body = { roomId: room?.id, debateId, message, group }
 		socket.emit('send_message', body)
 	}
@@ -162,7 +162,7 @@ const DebateChatRoomPage: NextPage<Props> = ({ debateId }: Props) => {
 								{info?.title}
 							</span>
 
-							<span className='text-sm md:text-[13px] font-normal'>참관자 : {info?.observeUserIds?.length || 0}명</span>
+							{/* <span className='text-sm md:text-[13px] font-normal'>참관자 : {info?.observeUserIds?.length || 0}명</span> */}
 						</div>
 					</div>
 				</div>
@@ -197,16 +197,7 @@ const DebateChatRoomPage: NextPage<Props> = ({ debateId }: Props) => {
 							room={room}
 							chat={chat || []}
 							input={chkVisibleInput}
-							className={`${device !== 'mobile' && !isMember && 'rounded-t-[24px]'} h-[100vh] grow px-8 py-8`}
-						/>
-
-						<DambiSVG
-							width={56}
-							height={56}
-							className={`absolute ${chkVisibleInput ? 'bottom-40 md:bottom-48' : 'bottom-12'} right-10 md:right-16 cursor-pointer`}
-							style={{
-								filter: 'drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.08))',
-							}}
+							className={`${device !== 'mobile' && !isMember && 'rounded-t-[24px]'} h-[100vh] grow px-16 py-8`}
 						/>
 
 						<div className='flex flex-col items-center bg-[#F4F6F8] rounded-b-[24px] px-8 pb-8 pt-4'>

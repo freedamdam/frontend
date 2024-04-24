@@ -18,7 +18,6 @@ import DebateObserveJoinModal from 'components/Debate/modal/ObserveJoin'
 //-assets
 import ArrowSVG from 'public/icons/btn_left_arrow_pc.svg'
 import ArrowMSVG from 'public/icons/btn_left_arrow_m.svg'
-import FloatingDambiSVG from 'public/icons/dambi/round_color_dambi.svg'
 
 interface Props {
 	id: string
@@ -135,15 +134,6 @@ const DebateDetailViewPage: NextPage<Props> = ({ id }: Props) => {
 							</span>
 						</div>
 					</div>
-
-					<FloatingDambiSVG
-						width={56}
-						height={56}
-						className={`absolute top-12 right-2 cursor-pointer`}
-						style={{
-							filter: 'drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.08))',
-						}}
-					/>
 				</div>
 
 				<div className='flex flex-col items-center pt-[3.2rem] pb-[4.8rem]'>
