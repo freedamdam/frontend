@@ -130,9 +130,9 @@ const Register = () => {
 
 	return (
 		<Layout>
-			<div className='flex flex-col items-center justify-center mt-[44px] md:mt-[88px]'>
+			<div className='flex flex-col items-center justify-center mt-[24px] md:mt-[40px] '>
 				<div className='w-[320px] md:w-[640px] flex flex-col justify-center items-center'>
-					<TitleText className='mb-[4rem] md:mb-10' title={'회원가입'} />
+					<TitleText title={'회원가입'} />
 					<div className='w-full'>
 						<div>
 							<S.InputWrapper>
@@ -219,7 +219,7 @@ const Register = () => {
 						{/* <div className='mt-[28px] md:mt-[36px]'>
 							<p className='font-extrabold md:text-[16px] text-[14px]'>건강한 토의토론 문자를 위해 본인인증 서비스를 실시하고 있습니다.</p>
 						</div> */}
-						<div className='w-full mt-[2.4rem] md:mt-[3.6rem] mb-[2rem] text-[#666666]'>
+						<div className='w-full mt-[2.4rem] md:mt-[3.6rem] md:mb-[4rem] text-[#666666]'>
 							<LargeButton text={'완료'} onClick={handleRegister} />
 						</div>
 					</div>
