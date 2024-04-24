@@ -52,7 +52,7 @@ const LoginModal = ({ open, onClose }: Props) => {
 							<LockSVG width={device == 'mobile' ? 30 : 40} />
 						</div>
 					</div>
-					<span className='mb-8 text-base font-extrabold md:text-lg text-main-900'>로그인하고 지금 바로 확인해보세요.</span>
+					<span className='mb-8 text-base font-extrabold md:text-lg text-main-900'>로그인이 필요한 서비스입니다.</span>
 				</div>
 				<LargeButton text={'로그인하기'} onClick={() => router.push('/login')} />
 				<div className='flex gap-2 mt-6'>
