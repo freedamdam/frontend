@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { useCookies } from 'react-cookie'
 import { useState } from 'react'
 import Layout from 'layout'
 import * as S from './style'
@@ -8,8 +7,8 @@ import TitleText from 'components/common/TitleText'
 import LargeButton from 'components/Button/Large'
 
 import styled from 'styled-components'
-import axios from 'axios'
 import { useAuth } from 'utils/hooks/useAuth'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 	const router = useRouter()
@@ -24,9 +23,6 @@ const Login = () => {
 	const onChangePwd = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value)
 	}
-
-	// const [, setAccCookie] = useCookies(['accessToken'])
-	// const [, setRefCookie] = useCookies(['refreshToken'])
 
 	const { handleLogin } = useAuth()
 
@@ -76,8 +72,8 @@ const Login = () => {
 				</div>
 
 				<div className='flex w-full gap-4 mt-16'>
-					<S.FindButton onClick={() => router.push('/preparation')}>아이디 찾기</S.FindButton>
-					<S.FindButton onClick={() => router.push('/preparation')}>비밀번호 찾기</S.FindButton>
+					<S.FindButton onClick={() => toast.error('준비 중입니다...')}>아이디 찾기</S.FindButton>
+					<S.FindButton onClick={() => toast.error('준비 중입니다...')}>비밀번호 찾기</S.FindButton>
 				</div>
 			</div>
 		</Layout>
