@@ -2,7 +2,7 @@ import { io } from 'socket.io-client'
 import { createContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-const url = 'ws://api.damdam.chat'
+const url = 'wss://api.damdam.chat'
 const defualtState = {
     socket: null,
     connected: false,
