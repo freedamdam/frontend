@@ -25,7 +25,7 @@ const ChatInput = ({ value, placeholder, onChange, onSubmit, className }: Props)
 				placeholder={placeholder}
 				minRows={2}
 				maxRows={5}
-				className='w-full text-base input-textarea placeholder:text-sm md:placeholder:text-base'
+				className='w-full mb-8 text-base resize-none input-textarea placeholder:text-sm md:placeholder:text-base'
 				// onSubmit={() => onSubmit && onSubmit()}
 				onKeyDown={(e) => {
 					if (e.key === 'Enter') {
