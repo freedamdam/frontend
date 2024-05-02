@@ -35,6 +35,10 @@ const Login = () => {
 		handleLogin(userData)
 	}
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === 'Enter') return onSubmit()
+	}
+
 	return (
 		<Layout>
 			<div className='container flex flex-col items-center mx-auto mt-[88px] text-center p-0 md:w-[464px] h-full'>
@@ -57,6 +61,7 @@ const Login = () => {
 							onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangePwd(e)}
 							minLength={8}
 							maxLength={16}
+							onKeyDown={handleKeyDown}
 						/>
 					</div>
 					<div className='w-full mt-8'>
