@@ -27,6 +27,7 @@ interface Props {
 	status: string
 }
 
+// Server의 SSR 렌더링을 위한 함수, 이 함수를 사용하면 페이지가 요청될 때마다 서버 측에서 데이터를 가져와 페이지의 초기 props를 설정할 수 있음
 export const getServerSideProps = async (context: NextPageContext) => {
 	const { query } = context
 	const { status } = query
@@ -65,6 +66,7 @@ const DebateSearchPage: NextPage<Props> = ({ status }: Props) => {
 		if (!loggedIn) return setModal(true)
 		router.push('/debate/form/new')
 	}
+
 	const goDebateDetailPage = (id: string) => {
 		if (!loggedIn) return setModal(true)
 		router.push(`/debate/detail/${id}`)
@@ -110,13 +112,13 @@ const DebateSearchPage: NextPage<Props> = ({ status }: Props) => {
 		const end = (dashboard || {})['종료']
 
 		return (
-			<div className='flex flex-col'>
+			<div className='flex flex-col gap-16 mb-20'>
 				{isEmpty && <NoResult />}
 
 				{wait?.length ? (
-					<>
-						<div className='flex flex-row items-center justify-between mb-5'>
-							<span className='md:text-[2rem] text-base font-extrabold text-main-900'>토론자 모집 중</span>
+					<div className='flex flex-col gap-5'>
+						<div className='flex flex-row items-center justify-between'>
+							<span className='text-lg font-extrabold md:text-xl text-main-900'>토론자 모집 중</span>
 							<Link href={`/debate/${menu_list[1].value}`}>
 								<div className='flex flex-row items-center gap-[2px]'>
 									<span className='text-[13px] leading-4 text-main-900 font-normal'>더보기</span>
@@ -125,18 +127,18 @@ const DebateSearchPage: NextPage<Props> = ({ status }: Props) => {
 							</Link>
 						</div>
 
-						<div className='flex flex-row flex-wrap gap-10 mb-10'>
+						<div className='flex flex-row flex-wrap gap-10'>
 							{wait?.map((obj) => (
 								<DebateItemCard key={obj.id} column={device !== 'desktop' ? 1 : 3} data={obj} onClick={() => goDebateDetailPage(obj.id)} />
 							))}
 						</div>
-					</>
+					</div>
 				) : undefined}
 
 				{ing?.length ? (
-					<>
-						<div className='flex flex-row items-center justify-between mb-5'>
-							<span className='text-xl font-extrabold text-main-900'>실시간 토론 중</span>
+					<div className='flex flex-col gap-5'>
+						<div className='flex flex-row items-center justify-between'>
+							<span className='text-lg font-extrabold md:text-xl text-main-900'>실시간 토론 중</span>
 							<Link href={`/debate/${menu_list[2].value}`}>
 								<div className='flex flex-row items-center gap-[2px]'>
 									<span className='text-[13px] leading-4 text-main-900 font-normal'>더보기</span>
@@ -145,18 +147,18 @@ const DebateSearchPage: NextPage<Props> = ({ status }: Props) => {
 							</Link>
 						</div>
 
-						<div className='flex flex-row flex-wrap gap-10 mb-10'>
+						<div className='flex flex-row flex-wrap gap-10'>
 							{ing?.map((obj) => (
 								<DebateItemCard key={obj.id} column={device !== 'desktop' ? 1 : 3} data={obj} onClick={() => goDebateDetailPage(obj.id)} />
 							))}
 						</div>
-					</>
+					</div>
 				) : undefined}
 
 				{end?.length ? (
-					<>
-						<div className='flex flex-row items-center justify-between mb-5'>
-							<span className='text-xl font-extrabold text-main-900'>토론자 모집 완료</span>
+					<div className='flex flex-col gap-5'>
+						<div className='flex flex-row items-center justify-between'>
+							<span className='text-lg font-extrabold md:text-xl text-main-900'>토론자 모집 완료</span>
 							<Link href={`/debate/${menu_list[3].value}`}>
 								<div className='flex flex-row items-center gap-[2px]'>
 									<span className='text-[13px] leading-4 text-main-900 font-normal'>더보기</span>
@@ -165,12 +167,12 @@ const DebateSearchPage: NextPage<Props> = ({ status }: Props) => {
 							</Link>
 						</div>
 
-						<div className='flex flex-row flex-wrap gap-10 mb-10'>
+						<div className='flex flex-row flex-wrap gap-10'>
 							{end?.map((obj) => (
 								<DebateItemCard key={obj.id} column={device !== 'desktop' ? 1 : 3} data={obj} onClick={() => goDebateDetailPage(obj.id)} />
 							))}
 						</div>
-					</>
+					</div>
 				) : undefined}
 			</div>
 		)
@@ -179,11 +181,15 @@ const DebateSearchPage: NextPage<Props> = ({ status }: Props) => {
 	const Search = () => (
 		<div className='flex flex-col'>
 			<div className='flex flex-row flex-wrap gap-10'>
-				{!data?.length && <NoResult />}
-
-				{data?.map((obj) => (
-					<DebateItemCard key={obj.id} column={device !== 'desktop' ? 1 : 3} data={obj} onClick={() => goDebateDetailPage(obj.id)} />
-				))}
+				{!data?.length ? (
+					<NoResult />
+				) : (
+					<>
+						{data?.map((obj) => (
+							<DebateItemCard key={obj.id} column={device !== 'desktop' ? 1 : 3} data={obj} onClick={() => goDebateDetailPage(obj.id)} />
+						))}
+					</>
+				)}
 			</div>
 		</div>
 	)
